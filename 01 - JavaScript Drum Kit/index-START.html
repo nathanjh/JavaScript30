@@ -58,7 +58,46 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  const findByDataKey =
+    (el, keyCode) => document.querySelector(`${el}[data-key="${keyCode}"]`)
 
+  function playSound (e) {
+    const audio = findByDataKey('audio', e.keyCode)
+
+    if (audio) {
+      audio.currentTime = 0
+      audio.play()
+    }
+  }
+
+  function addTransitionToKey (e) {
+    const key = findByDataKey('div', e.keyCode)
+    if (key) key.classList.add('playing')
+  }
+
+  /* alternate solution to remove playing class, by listening on keyup event */
+  function removeTransitionFromKey (e) {
+    const key = findByDataKey('div', e.keyCode)
+    if (key) key.classList.remove('playing')
+  }
+
+  function removeTransitionFromKeys () {
+    const keys = document.querySelectorAll('.key')
+
+    keys.forEach(key => key.addEventListener('transitionend', e => {
+      if (e.propertyName == 'transform')
+        e.target.classList.remove('playing')
+    }))
+  }
+
+  window.addEventListener('keydown', e => {
+    playSound(e)
+    addTransitionToKey(e)
+  })
+
+  removeTransitionFromKeys()
+  /* if using keyup listener solution... */
+  // window.addEventListener('keyup', e => removeTransitionFromKey(e))
 </script>
 
 
