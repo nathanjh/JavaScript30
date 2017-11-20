@@ -62,13 +62,47 @@
       background:black;
       position: absolute;
       top:50%;
+      transform-origin: 100%;
+      transform:rotate(90deg);
+      transition-timing-function: cubic-bezier(0.32, 1.9, 0.59, 1.05);
+    }
+
+    .second-hand {
+      background: #555055;
+      height: 3px;
+    }
+
+    .hour-hand {
+      width: 40%;
+      right: 50%;
     }
 
   </style>
-
   <script>
+    /* hands */
+    const secondHand = document.querySelector('.second-hand')
+    const minuteHand = document.querySelector('.min-hand')
+    const hourHand = document.querySelector('.hour-hand')
 
+    /* helper functions to calculate degrees to rotate, and handle transitions */
+    const toDegrees = (num, perHour, offset) => ((num / perHour) * 360) + offset
 
+    function setTransitionAndRotate (deg, hand) {
+      hand.style.transition = deg === 90 ? 'all 0s' : 'all 0.07s'
+      hand.style.transform = `rotate(${deg}deg)`
+    }
+
+    /* time setter function */
+    function setTime () {
+      const now = new Date()
+
+      setTransitionAndRotate(toDegrees(now.getSeconds(), 60, 90), secondHand)
+      setTransitionAndRotate(toDegrees(now.getMinutes(), 60, 90), minuteHand)
+      setTransitionAndRotate(toDegrees(now.getHours(), 12, 90), hourHand)
+    }
+
+    /* run clock by calling setter function every second */
+    setInterval(setTime, 1000)
   </script>
 </body>
 </html>
